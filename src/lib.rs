@@ -244,7 +244,10 @@ pub fn derive_from_data(input: TokenStream) -> TokenStream {
                 let reader = data.open().take(limit);
                 return match ::rmp_serde::decode::from_read(reader) {
                     Ok(value) => Outcome::Success(value),
-                    Err(_error) => Outcome::Failure((Status::InternalServerError, Failure(Status::InternalServerError))),
+                    Err(_) => Outcome::Failure((
+                        Status::InternalServerError,
+                        Failure(Status::InternalServerError),
+                    )),
                 };
             }
         }}
