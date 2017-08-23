@@ -318,9 +318,9 @@ pub fn derive_responder(input: TokenStream) -> TokenStream {
                 .unwrap_or(false);
             if accept_msgpack {
                 return rmp_serde::to_vec(&self)
-                    .map_err(|_| Status::InternalServerError)
+                    .map_err(|_| ::rocket::http::Status::InternalServerError)
                     .and_then(|buf| {
-                        Response::build()
+                        ::rocket::response::Response::build()
                             .sized_body(::std::io::Cursor::new(buf))
                             .ok()
                     });
@@ -336,9 +336,6 @@ pub fn derive_responder(input: TokenStream) -> TokenStream {
         /// fails, an `Err` of `Status::InternalServerError` is returned.
         impl ::rocket::response::Responder<'static> for #ident {
             fn respond_to(self, request: &::rocket::Request) -> ::rocket::response::Result<'static> {
-                use rocket::http::Status;
-                use rocket::response::Response;
-
                 #json
 
                 #msgpack
@@ -346,7 +343,7 @@ pub fn derive_responder(input: TokenStream) -> TokenStream {
                 // If none of the known formats are specified in the `Accept` header, then return
                 // a 406 Not Acceptable error to indicate that the resource couldn't be returned
                 // in an acceptable format.
-                Err(Status::NotAcceptable)
+                Err(::rocket::http::Status::NotAcceptable)
             }
         }
     };
