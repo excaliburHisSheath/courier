@@ -1,4 +1,4 @@
-#![cfg(feature = "json")]
+#![cfg(feature = "msgpack")]
 
 #![feature(plugin)]
 #![plugin(rocket_codegen)]
@@ -6,11 +6,12 @@
 extern crate rocket;
 #[macro_use]
 extern crate courier;
-#[cfg(feature = "msgpack")]
 extern crate rmp_serde;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
+
+#[cfg(feature = "json")]
 extern crate serde_json;
 
 use rocket::local::Client;
